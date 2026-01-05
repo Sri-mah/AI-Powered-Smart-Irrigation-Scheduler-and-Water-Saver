@@ -59,5 +59,5 @@ difference in the long run.
 
 For us, this hackathon was not just about building a project,
 but about building something meaningful and useful in the real world.
-
-If this idea can help save even a small amount of water, we believe the effort is worth it.
+ 
+*/ If this idea can help save even a small amount of water, we believe the effort is worth it. /*
