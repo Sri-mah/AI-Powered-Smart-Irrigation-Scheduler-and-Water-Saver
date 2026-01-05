@@ -62,7 +62,14 @@ but about building something meaningful and useful in the real world.
  
 */ If this idea can help save even a small amount of water, we believe the effort is worth it. /*
 
-## 📸 Project Screenshot
+## 📸 Project Screenshots
 
-![Smart Irrigation Dashboard](screen shot.png)
+### 🖥 Dashboard View
+![Dashboard](dashboard.png)
+
+### 🚰 Pump ON State
+![Pump ON](pump_on.png)
+
+### ✅ Pump OFF State
+![Pump OFF](pump_off.png)
 
