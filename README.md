@@ -61,3 +61,8 @@ For us, this hackathon was not just about building a project,
 but about building something meaningful and useful in the real world.
  
 */ If this idea can help save even a small amount of water, we believe the effort is worth it. /*
+
+## 📸 Project Screenshot
+
+![Smart Irrigation Dashboard](screen shot.png)
+
