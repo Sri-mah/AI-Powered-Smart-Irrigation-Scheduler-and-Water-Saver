@@ -48,7 +48,16 @@ This encourages better decisions and consistent water saving.
 • Mobile app for farmers.
 • Weather-based irrigation suggestions.
 
-🏆 Hackathon Relevance
+🚀 Why this matters in a hackathon
 
-This project shows how AI can be applied practically in agriculture.
-By combining intelligence with gamification, we aim to promote sustainable farming in a simple and effective way.
+In many hackathons, projects look impressive but don’t always solve real problems.
+We chose agriculture because water wastage is something we see around us every day.
+
+This project is our small attempt to help farmers make better irrigation decisions
+using AI, instead of guesswork. Even saving a little water every day can make a big
+difference in the long run.
+
+For us, this hackathon was not just about building a project,
+but about building something meaningful and useful in the real world.
+
+If this idea can help save even a small amount of water, we believe the effort is worth it.
