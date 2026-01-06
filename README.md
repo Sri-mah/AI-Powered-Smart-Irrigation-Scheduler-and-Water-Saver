@@ -1,3 +1,19 @@
+## 🔗 Live Demo
+
+🌐 Check the working dashboard here:  
+https://sri-mah.github.io/AI-Powered-Smart-Irrigation-Scheduler-and-Water-Saver/
+
+## 🚀 How to Use
+
+1. Move the soil moisture slider
+2. Enter a threshold value
+3. Click “Check Irrigation”
+4. See AI prediction & water saving results
+
+> ⚙️ *Note:* The live link shows the frontend UI.  
+> The backend logic (Flask & AI prediction) runs locally or can be deployed to cloud.
+
+
 🌱 AI-Powered Smart Irrigation Scheduler & Water Saver
 
 💡 Our attempt to make irrigation smarter and water-saving easier
