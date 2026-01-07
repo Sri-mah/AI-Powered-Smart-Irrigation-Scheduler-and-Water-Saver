@@ -2,192 +2,115 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Smart Irrigation & Water Saver</title>
-
+<title>Smart Irrigation </title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:'Segoe UI',sans-serif;
-}
-
-body{
-  min-height:100vh;
-  background:
-    radial-gradient(circle at 20% 20%, #00ffe7 0%, transparent 40%),
-    radial-gradient(circle at 80% 80%, #6a00ff 0%, transparent 40%),
-    linear-gradient(135deg, #05010f, #020617, #050018);
-  background-attachment:fixed;
-  color:white;
-}
-
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:
-    repeating-linear-gradient(0deg, rgba(0,255,255,0.05) 0 1px, transparent 40px),
-    repeating-linear-gradient(90deg, rgba(0,255,255,0.05) 0 1px, transparent 40px);
-  z-index:-1;
-}
-
-h1{
-  margin-top:30px;
-  text-align:center;
-  font-size:42px;
-  text-shadow:0 0 25px rgba(255,255,255,0.6);
-}
-
-.gradient-text{
-  background:linear-gradient(90deg,#ff9a00,#ff005d,#ff9a00);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  font-weight:700;
-}
-
-.subtitle{
-  text-align:center;
-  margin-bottom:25px;
-}
-
-.card{
-  width:420px;
-  margin:25px auto;
-  padding:25px;
-  background:rgba(255,255,255,0.07);
-  backdrop-filter:blur(25px);
-  border-radius:22px;
-  border:1px solid rgba(0,255,255,0.5);
-  box-shadow:0 0 40px rgba(0,255,255,0.4);
-}
-
-input{
-  width:90%;
-  margin:10px 0;
-}
-
-.value{
-  color:#00ffe7;
-  font-weight:bold;
-}
-
-button{
-  background:linear-gradient(90deg,#00ffe7,#00b3ff);
-  border:none;
-  padding:12px 30px;
-  border-radius:30px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.status-box{
-  margin-top:15px;
-  padding:15px;
-  border-radius:15px;
-  background:rgba(0,255,255,0.2);
-  display:none;
-}
-
-footer{
-  text-align:center;
-  margin:30px;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+body{min-height:100vh;background:radial-gradient(circle at 20% 20%, #00ffe7 0%, transparent 40%),radial-gradient(circle at 80% 80%, #6a00ff 0%, transparent 40%),linear-gradient(135deg, #05010f, #020617, #050018);background-attachment:fixed;color:white;}
+body::before{content:"";position:fixed;inset:0;background:repeating-linear-gradient(0deg, rgba(0,255,255,0.05) 0 1px, transparent 40px),repeating-linear-gradient(90deg, rgba(0,255,255,0.05) 0 1px, transparent 40px);z-index:-1;}
+h1{margin-top:30px;text-align:center;font-size:42px;text-shadow:0 0 25px rgba(255,255,255,0.6);}
+.gradient-text{background:linear-gradient(90deg,#ff9a00,#ff005d,#ff9a00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;}
+.subtitle{text-align:center;margin-bottom:25px;}
+.card{width:420px;margin:25px auto;padding:25px;background:rgba(255,255,255,0.07);backdrop-filter:blur(25px);border-radius:22px;border:1px solid rgba(0,255,255,0.5);box-shadow:0 0 40px rgba(0,255,255,0.4);}
+input{width:90%;margin:10px 0;}
+.value{color:#00ffe7;font-weight:bold;}
+button{background:linear-gradient(90deg,#00ffe7,#00b3ff);border:none;padding:12px 30px;border-radius:30px;font-weight:bold;cursor:pointer;}
+.status-box{margin-top:15px;padding:15px;border-radius:15px;background:rgba(0,255,255,0.2);display:none;}
+footer{text-align:center;margin:30px;}
+.prediction-box{margin-top:10px;padding:10px;background:rgba(255,255,255,0.1);border-radius:10px;}
 </style>
 </head>
 
 <body>
 
-<h1>💧 Smart Irrigation & Water Saver</h1>
-<p class="subtitle gradient-text">
-AI-Powered • Smart Water Saving • Smart Agriculture
-</p>
+<h1>💧 Smart Irrigation & Water Saver 💧</h1>
+<p class="subtitle gradient-text">AI-Powered • Smart Water Saving • Smart Agriculture</p>
 
 <div class="card">
 
 <b>Soil Moisture (%)</b>
 <input type="range" min="0" max="100" value="40" id="moisture">
-<div class="value">
-  Current Moisture: <span id="mVal">40</span>%
-</div>
+<div class="value">Current Moisture: <span id="mVal">40</span>%</div>
 
 <b>Threshold (%)</b>
 <input type="number" value="30" id="threshold">
-<div class="value">
-  Threshold Set: <span id="tVal">30</span>%
-</div>
+<div class="value">Threshold Set: <span id="tVal">30</span>%</div>
 
 <br>
 <button onclick="analyze()">🚀 Analyze Irrigation</button>
 
 <div class="status-box" id="resultBox"></div>
+<div class="prediction-box" id="predictionBox" style="display:none;"></div>
 </div>
 
 <div class="card">
-  <h3>📊 Water Usage Analytics</h3>
-  <canvas id="chart"></canvas>
+<h3>📊 Water Usage Analytics</h3>
+<canvas id="chart"></canvas>
 </div>
 
-<footer class="gradient-text">
-Sustainable Farming • Hackathon Innovation
-</footer>
+<footer class="gradient-text">Sustainable Farming • Hackathon Innovation</footer>
 
 <script>
-const moisture = document.getElementById("moisture");
-const threshold = document.getElementById("threshold");
-const mVal = document.getElementById("mVal");
-const tVal = document.getElementById("tVal");
-const box = document.getElementById("resultBox");
+const moisture=document.getElementById("moisture");
+const threshold=document.getElementById("threshold");
+const mVal=document.getElementById("mVal");
+const tVal=document.getElementById("tVal");
+const box=document.getElementById("resultBox");
+const predictionBox=document.getElementById("predictionBox");
 
-moisture.oninput = () => mVal.innerText = moisture.value;
-threshold.oninput = () => tVal.innerText = threshold.value;
+moisture.oninput=()=>mVal.innerText=moisture.value;
+threshold.oninput=()=>tVal.innerText=threshold.value;
 
-let history = [];
+let history=[];
 let chart;
 
 function analyze(){
-  let m = Number(moisture.value);
-  let t = Number(threshold.value);
+    let m=Number(moisture.value);
+    let t=Number(threshold.value);
 
-  let result;
-  if(m < t){
-    result = "🚿 Irrigation ON – Soil is Dry";
-    history.push(10);
-  }else{
-    result = "✅ No Irrigation Needed – Soil Moist";
-    history.push(20);
-  }
+    let result="";
+    if(m<t){
+        result="🚿 Irrigation ON – Soil is Dry";
+        history.push(10);
+    }else{
+        result="✅ No Irrigation Needed – Soil Moist";
+        history.push(20);
+    }
 
-  box.style.display = "block";
-  box.innerHTML = result + "<br>💧 Water Saved: " + (100 - m) + "%";
+    box.style.display="block";
+    box.innerHTML=result+"<br>💧 Water Saved: "+(100-m)+"%";
 
-  drawChart();
+    // ✅ AI Prediction Simulation
+    let prediction="";
+    if(m < t) prediction="🤖 Prediction: Watering needed to prevent crop stress.";
+    else if(m > t+10) prediction="🤖 Prediction: Soil is moist, no watering required.";
+    else prediction="🤖 Prediction: Soil moisture borderline, monitor closely.";
+
+    predictionBox.style.display="block";
+    predictionBox.innerHTML=prediction;
+
+    drawChart();
 }
 
 function drawChart(){
-  if(chart){
-    chart.destroy();
-  }
-
-  chart = new Chart(document.getElementById("chart"),{
-    type:"line",
-    data:{
-      labels: history.map((_,i)=>"Day "+(i+1)),
-      datasets:[{
-        label:"Water Credit",
-        data:history,
-        borderColor:"#00fff0",
-        backgroundColor:"rgba(0,255,255,0.3)",
-        fill:true,
-        tension:0.4
-      }]
-    }
-  });
+    if(chart) chart.destroy();
+    chart=new Chart(document.getElementById("chart"),{
+        type:"line",
+        data:{
+            labels:history.map((_,i)=>"Day "+(i+1)),
+            datasets:[{
+                label:"Water Credit",
+                data:history,
+                borderColor:"#00fff0",
+                backgroundColor:"rgba(0,255,255,0.3)",
+                fill:true,
+                tension:0.4
+            }]
+        }
+    });
 }
 </script>
 
 </body>
 </html>
-
