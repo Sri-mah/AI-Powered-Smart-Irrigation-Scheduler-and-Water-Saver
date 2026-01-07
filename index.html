@@ -17,9 +17,8 @@ input{width:90%;margin:10px 0;}
 .value{color:#00ffe7;font-weight:bold;}
 button{background:linear-gradient(90deg,#00ffe7,#00b3ff);border:none;padding:12px 30px;border-radius:30px;font-weight:bold;cursor:pointer;}
 .status-box{margin-top:15px;padding:15px;border-radius:15px;background:rgba(0,255,255,0.2);display:none;}
-.prediction-box{margin-top:10px;padding:10px;background:rgba(255,255,255,0.1);border-radius:10px;display:none;}
 footer{text-align:center;margin:30px;}
-.score-box{margin-top:10px;padding:10px;background:rgba(0,255,255,0.2);border-radius:10px;font-weight:bold;}
+.prediction-box{margin-top:10px;padding:10px;background:rgba(255,255,255,0.1);border-radius:10px;}
 </style>
 </head>
 
@@ -42,8 +41,7 @@ footer{text-align:center;margin:30px;}
 <button onclick="analyze()">🚀 Analyze Irrigation</button>
 
 <div class="status-box" id="resultBox"></div>
-<div class="prediction-box" id="predictionBox"></div>
-<div class="score-box" id="scoreBox"></div>
+<div class="prediction-box" id="predictionBox" style="display:none;"></div>
 </div>
 
 <div class="card">
@@ -60,7 +58,6 @@ const mVal=document.getElementById("mVal");
 const tVal=document.getElementById("tVal");
 const box=document.getElementById("resultBox");
 const predictionBox=document.getElementById("predictionBox");
-const scoreBox=document.getElementById("scoreBox");
 
 moisture.oninput=()=>mVal.innerText=moisture.value;
 threshold.oninput=()=>tVal.innerText=threshold.value;
@@ -72,7 +69,6 @@ function analyze(){
     let m=Number(moisture.value);
     let t=Number(threshold.value);
 
-    // Result
     let result="";
     if(m<t){
         result="🚿 Irrigation ON – Soil is Dry";
@@ -81,24 +77,18 @@ function analyze(){
         result="✅ No Irrigation Needed – Soil Moist";
         history.push(20);
     }
+
     box.style.display="block";
     box.innerHTML=result+"<br>💧 Water Saved: "+(100-m)+"%";
 
-    // AI Prediction Simulation
+    // ✅ AI Prediction Simulation
     let prediction="";
     if(m < t) prediction="🤖 Prediction: Watering needed to prevent crop stress.";
     else if(m > t+10) prediction="🤖 Prediction: Soil is moist, no watering required.";
     else prediction="🤖 Prediction: Soil moisture borderline, monitor closely.";
+
     predictionBox.style.display="block";
     predictionBox.innerHTML=prediction;
-
-    // Water Score Calculation (0-100)
-    let score = Math.max(0, Math.min(100, 100 - Math.abs(m-t)));
-    let badge="";
-    if(score>=80) badge="🏆 Excellent Water Management";
-    else if(score>=50) badge="🥇 Good Water Management";
-    else badge="⚠️ Needs Attention";
-    scoreBox.innerHTML="🌟 Water Score: "+score+" | "+badge;
 
     drawChart();
 }
