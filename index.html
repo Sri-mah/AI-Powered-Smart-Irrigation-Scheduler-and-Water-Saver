@@ -2,111 +2,162 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Smart Irrigation & Water Saver</title>
+<title>Smart Irrigation – Neon Control System</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+
 body{
-  margin:0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg,#00c9a7,#845ec2);
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  color:white;
+min-height:100vh;
+background:
+radial-gradient(circle at 20% 20%, #00ffe7 0%, transparent 40%),
+radial-gradient(circle at 80% 80%, #6a00ff 0%, transparent 40%),
+linear-gradient(135deg, #05010f, #020617, #050018);
+background-attachment:fixed;
+color:white;
 }
-.container{
-  background:rgba(0,0,0,0.35);
-  padding:30px;
-  width:360px;
-  border-radius:16px;
-  box-shadow:0 0 25px rgba(0,0,0,0.4);
+
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background:
+repeating-linear-gradient(0deg, rgba(0,255,255,0.05) 0 1px, transparent 40px),
+repeating-linear-gradient(90deg, rgba(0,255,255,0.05) 0 1px, transparent 40px);
+z-index:-1;
 }
+
 h1{
-  text-align:center;
-  margin-bottom:10px;
+margin-top:30px;
+text-align:center;
+font-size:42px;
+text-shadow:0 0 25px rgba(255,255,255,0.6);
 }
-.sub{
-  text-align:center;
-  font-size:13px;
-  opacity:0.9;
-  margin-bottom:20px;
+
+.gradient-text{
+background:linear-gradient(90deg,#ff9a00,#ff005d,#ff9a00);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+font-weight:700;
 }
-label{
-  font-size:14px;
+
+.subtitle{text-align:center;margin-bottom:25px;}
+
+.card{
+width:420px;
+margin:25px auto;
+padding:25px;
+background:rgba(255,255,255,0.07);
+backdrop-filter:blur(25px);
+border-radius:22px;
+border:1px solid rgba(0,255,255,0.5);
+box-shadow:0 0 40px rgba(0,255,255,0.4);
 }
-input[type=range]{
-  width:100%;
-}
-input[type=number]{
-  width:100%;
-  padding:6px;
-  border-radius:6px;
-  border:none;
-  margin-top:5px;
-}
+
+input{width:90%;margin:10px 0;}
+
+.value{color:#00ffe7;font-weight:bold;}
+
 button{
-  width:100%;
-  margin-top:15px;
-  padding:10px;
-  border:none;
-  border-radius:10px;
-  background:#00ffd5;
-  font-weight:bold;
-  cursor:pointer;
+background:linear-gradient(90deg,#00ffe7,#00b3ff);
+border:none;
+padding:12px 30px;
+border-radius:30px;
+font-weight:bold;
+cursor:pointer;
 }
-.result{
-  margin-top:15px;
-  background:rgba(255,255,255,0.15);
-  padding:10px;
-  border-radius:10px;
-  font-size:14px;
+
+.status-box{
+margin-top:15px;
+padding:15px;
+border-radius:15px;
+background:rgba(0,255,255,0.2);
+display:none;
 }
+
+footer{text-align:center;margin:30px;}
 </style>
 </head>
 
 <body>
-<div class="container">
-  <h1>Smart Irrigation</h1>
-  <div class="sub">AI-Powered Smart Water Saving</div>
 
-  <label>Soil Moisture (%)</label>
-  <input type="range" id="moisture" min="0" max="100" value="40"
-         oninput="moistureValue.innerText=this.value">
-  <div>Current Moisture: <b><span id="moistureValue">40</span>%</b></div>
+<h1>💧 Smart Irrigation & Water Saver</h1>
+<p class="subtitle gradient-text">
+AI-Powered • Smart Water Saving • Smart Agriculture
+</p>
 
-  <br>
+<div class="card">
 
-  <label>Threshold (%)</label>
-  <input type="number" id="threshold" value="33">
+<b>Soil Moisture (%)</b>
+<input type="range" min="0" max="100" value="40" id="moisture">
+<div class="value">Current Moisture: <span id="mVal">40</span>%</div>
 
-  <button onclick="analyze()">Analyze Irrigation</button>
+<b>Threshold (%)</b>
+<input type="number" value="30" id="threshold">
+<div class="value">Threshold Set: <span id="tVal">30</span>%</div>
 
-  <div class="result" id="result"></div>
-  <div class="result" id="pump"></div>
-  <div class="result" id="prediction"></div>
-  <div class="result" id="score"></div>
-  <div class="result" id="badge"></div>
+<br>
+<button onclick="analyze()">🚀 Analyze Irrigation</button>
+
+<div class="status-box" id="resultBox"></div>
 </div>
 
-<script>
-function analyze(){
-  let moisture = parseInt(document.getElementById("moisture").value);
-  let threshold = parseInt(document.getElementById("threshold").value);
+<div class="card">
+<h3>📊 Water Usage Analytics</h3>
+<canvas id="chart"></canvas>
+</div>
 
-  if(moisture < threshold){
-    document.getElementById("result").innerText = "⚠️ Irrigation Needed";
-    document.getElementById("pump").innerText = "💧 Pump Status: ON";
-    document.getElementById("prediction").innerText = "Dry soil detected";
-    document.getElementById("score").innerText = "Water Score: 5";
-    document.getElementById("badge").innerText = "🌱 Beginner Farmer";
-  }else{
-    document.getElementById("result").innerText = "✅ No Irrigation Needed";
-    document.getElementById("pump").innerText = "🚫 Pump Status: OFF";
-    document.getElementById("prediction").innerText = "Soil moisture sufficient";
-    document.getElementById("score").innerText = "Water Score: 10";
-    document.getElementById("badge").innerText = "🏆 Water Saver Pro";
-  }
+<footer class="gradient-text">
+Sustainable Farming • Hackathon Innovation
+</footer>
+
+<script>
+const moisture=document.getElementById("moisture");
+const threshold=document.getElementById("threshold");
+const mVal=document.getElementById("mVal");
+const tVal=document.getElementById("tVal");
+const box=document.getElementById("resultBox");
+
+moisture.oninput=()=>mVal.innerText=moisture.value;
+threshold.oninput=()=>tVal.innerText=threshold.value;
+
+let history=[];
+
+function analyze(){
+let m=+moisture.value;
+let t=+threshold.value;
+
+let result="";
+if(m<t){
+result="🚿 Irrigation ON – Soil is Dry";
+history.push(10);
+}else{
+result="✅ No Irrigation Needed – Soil Moist";
+history.push(20);
+}
+
+box.style.display="block";
+box.innerHTML=result+"<br>💧 Water Saved: "+(100-m)+"%";
+
+drawChart();
+}
+
+function drawChart(){
+new Chart(document.getElementById("chart"),{
+type:"line",
+data:{
+labels:history.map((_,i)=>"Day "+(i+1)),
+datasets:[{
+label:"Water Credit",
+data:history,
+borderColor:"#00fff0",
+backgroundColor:"rgba(0,255,255,0.3)",
+fill:true,
+tension:0.4
+}]
+}
+});
 }
 </script>
 
