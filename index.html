@@ -6,101 +6,187 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
 
+/* ===== ULTRA NEON BACKGROUND ===== */
 body{
-min-height:100vh;
-background:
-radial-gradient(circle at 20% 20%, #00ffe7 0%, transparent 40%),
-radial-gradient(circle at 80% 80%, #6a00ff 0%, transparent 40%),
-linear-gradient(135deg, #05010f, #020617, #050018);
-background-attachment:fixed;
-color:white;
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 20% 20%, #00ffe7 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, #6a00ff 0%, transparent 40%),
+        linear-gradient(135deg, #05010f, #020617, #050018);
+    background-attachment: fixed;
+    overflow-x:hidden;
+    color:white;
 }
 
+/* GRID EFFECT */
 body::before{
-content:"";
-position:fixed;
-inset:0;
-background:
-repeating-linear-gradient(0deg, rgba(0,255,255,0.05) 0 1px, transparent 40px),
-repeating-linear-gradient(90deg, rgba(0,255,255,0.05) 0 1px, transparent 40px);
-z-index:-1;
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+        repeating-linear-gradient(0deg, rgba(0,255,255,0.05) 0 1px, transparent 40px),
+        repeating-linear-gradient(90deg, rgba(0,255,255,0.05) 0 1px, transparent 40px);
+    pointer-events:none;
+    z-index:-1;
 }
 
+/* ===== HEADER ===== */
 h1{
-margin-top:30px;
-text-align:center;
-font-size:42px;
-text-shadow:0 0 25px rgba(255,255,255,0.6);
+    margin-top:30px;
+    text-align:center;
+    font-size:42px;
+    letter-spacing:2px;
+    color:#ffffff;
+    text-shadow:0 0 25px rgba(255,255,255,0.6);
 }
 
+/* 🔥 COMMON GRADIENT TEXT (Subtitle + Footer) */
 .gradient-text{
-background:linear-gradient(90deg,#ff9a00,#ff005d,#ff9a00);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-font-weight:700;
+    background: linear-gradient(90deg,#ff9a00,#ff005d,#ff9a00);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    text-shadow:0 0 18px rgba(255,100,50,0.9);
+    font-weight:700;
+    letter-spacing:1px;
 }
 
-.subtitle{text-align:center;margin-bottom:25px;}
+/* SUBTITLE */
+.subtitle{
+    text-align:center;
+    margin-bottom:25px;
+    font-size:16px;
+}
 
+/* ===== GLASS CARD ===== */
 .card{
-width:420px;
-margin:25px auto;
-padding:25px;
-background:rgba(255,255,255,0.07);
-backdrop-filter:blur(25px);
-border-radius:22px;
-border:1px solid rgba(0,255,255,0.5);
-box-shadow:0 0 40px rgba(0,255,255,0.4);
+    width:420px;
+    margin:25px auto;
+    padding:25px;
+    background:rgba(255,255,255,0.07);
+    backdrop-filter: blur(25px);
+    border-radius:22px;
+    border:1px solid rgba(0,255,255,0.5);
+    box-shadow:
+        0 0 40px rgba(0,255,255,0.4),
+        inset 0 0 30px rgba(0,255,255,0.2);
+    transition:0.4s;
 }
 
-input{width:90%;margin:10px 0;}
+.card:hover{
+    transform:translateY(-10px) scale(1.03);
+    box-shadow:0 0 60px rgba(0,255,255,0.8);
+}
 
-.value{color:#00ffe7;font-weight:bold;}
+/* INPUTS */
+input[type=range], input[type=number]{
+    width:90%;
+    margin:10px 0;
+    accent-color:#00ffe1;
+}
 
+.value{
+    font-size:16px;
+    font-weight:bold;
+    color:#00ffe7;
+}
+
+/* BUTTON */
 button{
-background:linear-gradient(90deg,#00ffe7,#00b3ff);
-border:none;
-padding:12px 30px;
-border-radius:30px;
-font-weight:bold;
-cursor:pointer;
+    margin-top:10px;
+    background:linear-gradient(90deg,#00ffe7,#00b3ff);
+    border:none;
+    padding:12px 30px;
+    font-size:15px;
+    font-weight:bold;
+    border-radius:30px;
+    cursor:pointer;
+    color:#001;
+    box-shadow:0 0 20px #00ffff;
+    transition:0.3s;
+}
+button:hover{
+    transform:scale(1.1);
+    box-shadow:0 0 40px #00ffff;
 }
 
+/* STATUS */
 .status-box{
-margin-top:15px;
-padding:15px;
-border-radius:15px;
-background:rgba(0,255,255,0.2);
-display:none;
+    margin-top:15px;
+    padding:15px;
+    border-radius:15px;
+    background:rgba(0,255,255,0.2);
+    border:1px solid rgba(0,255,255,0.6);
 }
 
-footer{text-align:center;margin:30px;}
+.ai{
+    margin-top:12px;
+    padding:10px;
+    border-radius:10px;
+    background:rgba(100,255,255,0.2);
+}
+
+.score{
+    font-size:18px;
+    color:#7fffd4;
+}
+
+.badge{
+    font-size:20px;
+    color:#00ffd5;
+}
+
+/* FOOTER */
+footer{
+    margin:30px 0;
+    text-align:center;
+    font-size:14px;
+}
 </style>
 </head>
 
 <body>
 
-<h1>💧 Smart Irrigation & Water Saver</h1>
+<h1>💧 Smart Irrigation & Water Saver 💧</h1>
 <p class="subtitle gradient-text">
-AI-Powered • Smart Water Saving • Smart Agriculture
+• AI-Powered • Smart Water Saving • Smart Agriculture
 </p>
 
 <div class="card">
+<form method="POST">
 
-<b>Soil Moisture (%)</b>
-<input type="range" min="0" max="100" value="40" id="moisture">
-<div class="value">Current Moisture: <span id="mVal">40</span>%</div>
-
-<b>Threshold (%)</b>
-<input type="number" value="30" id="threshold">
-<div class="value">Threshold Set: <span id="tVal">30</span>%</div>
+<b>Soil Moisture (%)</b><br>
+<input type="range" name="moisture" min="0" max="100" value="{{ moisture }}"
+oninput="document.getElementById('mVal').innerText=this.value">
+<div class="value">Current Moisture: <span id="mVal">{{ moisture }}</span>%</div>
 
 <br>
-<button onclick="analyze()">🚀 Analyze Irrigation</button>
 
-<div class="status-box" id="resultBox"></div>
+<b>Threshold (%)</b><br>
+<input type="number" name="threshold" value="{{ threshold }}"
+oninput="document.getElementById('tVal').innerText=this.value">
+<div class="value">Threshold Set: <span id="tVal">{{ threshold }}</span>%</div>
+
+<br><br>
+<button type="submit">🚀 Analyze Irrigation</button>
+</form>
+
+{% if result %}
+<div class="status-box">🔔 {{ result }}</div>
+
+<p>{{ water }}</p>
+<p>{{ save }}</p>
+
+<div class="ai">🤖 {{ prediction }}</div>
+<p class="score">🌟 Water Score: {{ water_credit }}</p>
+<div class="badge">🏆 {{ badge }}</div>
+{% endif %}
 </div>
 
 <div class="card">
@@ -109,56 +195,25 @@ AI-Powered • Smart Water Saving • Smart Agriculture
 </div>
 
 <footer class="gradient-text">
-Sustainable Farming • Hackathon Innovation
+• Sustainable Farming • Smart Decisions • Hackathon Innovation 
 </footer>
 
 <script>
-const moisture=document.getElementById("moisture");
-const threshold=document.getElementById("threshold");
-const mVal=document.getElementById("mVal");
-const tVal=document.getElementById("tVal");
-const box=document.getElementById("resultBox");
-
-moisture.oninput=()=>mVal.innerText=moisture.value;
-threshold.oninput=()=>tVal.innerText=threshold.value;
-
-let history=[];
-
-function analyze(){
-let m=+moisture.value;
-let t=+threshold.value;
-
-let result="";
-if(m<t){
-result="🚿 Irrigation ON – Soil is Dry";
-history.push(10);
-}else{
-result="✅ No Irrigation Needed – Soil Moist";
-history.push(20);
-}
-
-box.style.display="block";
-box.innerHTML=result+"<br>💧 Water Saved: "+(100-m)+"%";
-
-drawChart();
-}
-
-function drawChart(){
-new Chart(document.getElementById("chart"),{
-type:"line",
-data:{
-labels:history.map((_,i)=>"Day "+(i+1)),
-datasets:[{
-label:"Water Credit",
-data:history,
-borderColor:"#00fff0",
-backgroundColor:"rgba(0,255,255,0.3)",
-fill:true,
-tension:0.4
-}]
-}
+const data = {{ history | safe }};
+new Chart(document.getElementById("chart"), {
+    type:"line",
+    data:{
+        labels:data.map((_,i)=>"Day "+(i+1)),
+        datasets:[{
+            label:"Water Credit",
+            data:data,
+            borderColor:"#00fff0",
+            backgroundColor:"rgba(0,255,255,0.3)",
+            tension:0.4,
+            fill:true
+        }]
+    }
 });
-}
 </script>
 
 </body>
