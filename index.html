@@ -6,30 +6,188 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-body{min-height:100vh;background:radial-gradient(circle at 20% 20%, #00ffe7 0%, transparent 40%),radial-gradient(circle at 80% 80%, #6a00ff 0%, transparent 40%),linear-gradient(135deg, #05010f, #020617, #050018);background-attachment:fixed;color:white;}
-body::before{content:"";position:fixed;inset:0;background:repeating-linear-gradient(0deg, rgba(0,255,255,0.05) 0 1px, transparent 40px),repeating-linear-gradient(90deg, rgba(0,255,255,0.05) 0 1px, transparent 40px);z-index:-1;}
-h1{margin-top:30px;text-align:center;font-size:42px;text-shadow:0 0 25px rgba(255,255,255,0.6);}
-.gradient-text{background:linear-gradient(90deg,#ff9a00,#ff005d,#ff9a00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;}
-.subtitle{text-align:center;margin-bottom:25px;}
-.card{width:420px;margin:25px auto;padding:25px;background:rgba(255,255,255,0.07);backdrop-filter:blur(25px);border-radius:22px;border:1px solid rgba(0,255,255,0.5);box-shadow:0 0 40px rgba(0,255,255,0.4);}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
+/* ===== BACKGROUND ===== */
+body{
+  min-height:100vh;
+  overflow-x:hidden;
+  color:#000;
+  background:linear-gradient(to bottom,#9fe7ff,#dff7ff);
+  position:relative;
+}
+
+/* ☀️ Sun */
+.sun{
+  position:fixed;
+  top:40px;
+  right:40px;
+  font-size:70px;
+  display:none;
+  animation:rotateSun 12s linear infinite;
+}
+@keyframes rotateSun{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+
+/* ☁️ Clouds */
+.cloud{
+  position:absolute;
+  background:white;
+  border-radius:50px;
+  opacity:0.6;
+  animation:moveClouds 60s linear infinite;
+}
+.cloud::before,.cloud::after{
+  content:"";
+  position:absolute;
+  background:white;
+  border-radius:50%;
+}
+.cloud::before{
+  width:60px;height:60px;top:-30px;left:20px;
+}
+.cloud::after{
+  width:80px;height:80px;top:-40px;right:20px;
+}
+@keyframes moveClouds{
+  from{transform:translateX(-200px);}
+  to{transform:translateX(120vw);}
+}
+
+/* 🌧️ Rain */
+.rain{
+  position:absolute;
+  width:2px;
+  height:15px;
+  background:rgba(255,255,255,0.6);
+  animation:rainFall 1s linear infinite;
+  display:none;
+}
+@keyframes rainFall{
+  from{transform:translateY(-20px);}
+  to{transform:translateY(100vh);}
+}
+
+/* ===== CONTENT ===== */
+h1{
+  margin-top:30px;
+  text-align:center;
+  font-size:42px;
+  color:#003344;
+}
+
+.subtitle{
+  text-align:center;
+  margin-bottom:25px;
+  font-weight:600;
+  color:#004d66;
+}
+
+.card{
+  width:420px;
+  margin:25px auto;
+  padding:25px;
+  background:rgba(255,255,255,0.85);
+  border-radius:22px;
+  border:2px solid #000;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+b{color:#003344;}
+.value{color:#006699;font-weight:bold;}
+
 input{width:90%;margin:10px 0;}
-.value{color:#00ffe7;font-weight:bold;}
-button{background:linear-gradient(90deg,#00ffe7,#00b3ff);border:none;padding:12px 30px;border-radius:30px;font-weight:bold;cursor:pointer;}
-.status-box{margin-top:15px;padding:15px;border-radius:15px;background:rgba(0,255,255,0.2);display:none;}
-.prediction-box{margin-top:10px;padding:10px;background:rgba(255,255,255,0.1);border-radius:10px;display:none;}
-footer{text-align:center;margin:30px;}
-.score-box{margin-top:10px;padding:10px;background:rgba(0,255,255,0.2);border-radius:10px;font-weight:bold;}
+
+button{
+  background:#00c2ff;
+  border:none;
+  padding:12px 30px;
+  border-radius:30px;
+  font-weight:bold;
+  cursor:pointer;
+  color:#000;
+}
+
+.status-box,
+.prediction-box,
+.score-box,
+.badge-box{
+  margin-top:10px;
+  padding:10px;
+  background:#e0f7ff;
+  border-radius:10px;
+  font-weight:600;
+  display:none;
+}
+
+/* ===== CROPS ===== */
+.farm{
+  position:relative;
+  height:120px;
+  margin-top:40px;
+  background:#4caf50;
+  overflow:hidden;
+}
+.crop{
+  position:absolute;
+  bottom:0;
+  width:6px;
+  background:#2e7d32;
+  animation:grow 5s ease-in-out infinite;
+}
+.crop::after{
+  content:"🌿";
+  position:absolute;
+  top:-18px;
+  left:-8px;
+  font-size:18px;
+}
+@keyframes grow{
+  0%{height:10px;}
+  50%{height:70px;}
+  100%{height:10px;}
+}
+
+footer{
+  text-align:center;
+  margin:20px;
+  font-weight:bold;
+  color:#004d66;
+}
 </style>
 </head>
 
 <body>
 
+<!-- ☀️ Sun -->
+<div class="sun" id="sun">☀️</div>
+
+<!-- Clouds -->
+<div class="cloud" style="width:140px;height:50px;top:40px;left:-150px;"></div>
+<div class="cloud" style="width:180px;height:60px;top:100px;left:-300px;animation-duration:80s;"></div>
+
+<!-- Rain drops -->
+<script>
+for(let i=0;i<70;i++){
+  let drop=document.createElement("div");
+  drop.className="rain";
+  drop.style.left=Math.random()*100+"vw";
+  drop.style.animationDelay=Math.random()+"s";
+  document.body.appendChild(drop);
+}
+</script>
+
 <h1>💧 Smart Irrigation & Water Saver 💧</h1>
-<p class="subtitle gradient-text">• AI-Powered • Smart Water Saving • Smart Agriculture</p>
+<p class="subtitle">AI-Powered • Smart Water Saving • Smart Agriculture</p>
 
 <div class="card">
-
 <b>Soil Moisture (%)</b>
 <input type="range" min="0" max="100" value="40" id="moisture">
 <div class="value">Current Moisture: <span id="mVal">40</span>%</div>
@@ -44,6 +202,7 @@ footer{text-align:center;margin:30px;}
 <div class="status-box" id="resultBox"></div>
 <div class="prediction-box" id="predictionBox"></div>
 <div class="score-box" id="scoreBox"></div>
+<div class="badge-box" id="badgeBox"></div>
 </div>
 
 <div class="card">
@@ -51,7 +210,16 @@ footer{text-align:center;margin:30px;}
 <canvas id="chart"></canvas>
 </div>
 
-<footer class="gradient-text">  • Sustainable Farming • Hackathon Innovation</footer>
+<!-- Crops -->
+<div class="farm">
+  <div class="crop" style="left:10%"></div>
+  <div class="crop" style="left:30%;animation-delay:1s"></div>
+  <div class="crop" style="left:50%;animation-delay:2s"></div>
+  <div class="crop" style="left:70%;animation-delay:3s"></div>
+  <div class="crop" style="left:90%;animation-delay:4s"></div>
+</div>
+
+<footer>🌱 Sustainable Farming • Hackathon Innovation</footer>
 
 <script>
 const moisture=document.getElementById("moisture");
@@ -61,67 +229,71 @@ const tVal=document.getElementById("tVal");
 const box=document.getElementById("resultBox");
 const predictionBox=document.getElementById("predictionBox");
 const scoreBox=document.getElementById("scoreBox");
+const badgeBox=document.getElementById("badgeBox");
+const sun=document.getElementById("sun");
+const rainDrops=document.querySelectorAll(".rain");
 
 moisture.oninput=()=>mVal.innerText=moisture.value;
 threshold.oninput=()=>tVal.innerText=threshold.value;
 
-let history=[];
-let chart;
+let history=[],chart;
 
 function analyze(){
-    let m=Number(moisture.value);
-    let t=Number(threshold.value);
+  let m=Number(moisture.value);
+  let t=Number(threshold.value);
 
-    // Result
-    let result="";
-    if(m<t){
-        result="🚿 Irrigation ON – Soil is Dry";
-        history.push(10);
-    }else{
-        result="✅ No Irrigation Needed – Soil Moist";
-        history.push(20);
-    }
-    box.style.display="block";
-    box.innerHTML=result+"<br>💧 Water Saved: "+(100-m)+"%";
+  if(m<t){
+    box.innerHTML="🚿 Irrigation ON – Soil is Dry";
+    sun.style.display="block";
+    rainDrops.forEach(r=>r.style.display="none");
+    history.push(10);
+  }else{
+    box.innerHTML="✅ No Irrigation Needed – Soil Moist";
+    sun.style.display="none";
+    rainDrops.forEach(r=>r.style.display="block");
+    history.push(20);
+  }
 
-    // AI Prediction Simulation
-    let prediction="";
-    if(m < t) prediction="🤖 Prediction: Watering needed to prevent crop stress.";
-    else if(m > t+10) prediction="🤖 Prediction: Soil is moist, no watering required.";
-    else prediction="🤖 Prediction: Soil moisture borderline, monitor closely.";
-    predictionBox.style.display="block";
-    predictionBox.innerHTML=prediction;
+  box.style.display="block";
 
-    // Water Score Calculation (0-100)
-    let score = Math.max(0, Math.min(100, 100 - Math.abs(m-t)));
-    let badge="";
-    if(score>=80) badge="🏆 Excellent Water Management";
-    else if(score>=50) badge="🥇 Good Water Management";
-    else badge="⚠️ Needs Attention";
-    scoreBox.innerHTML="🌟 Water Score: "+score+" | "+badge;
+  predictionBox.style.display="block";
+  predictionBox.innerHTML = m<t
+    ? "🤖 Prediction: Watering needed to prevent crop stress."
+    : "🤖 Prediction: Soil moisture is sufficient.";
 
-    drawChart();
+  let score=Math.max(0,100-Math.abs(m-t));
+  scoreBox.style.display="block";
+  scoreBox.innerHTML="🌟 Water Score: "+score;
+
+  let badge="🥉 Beginner Saver";
+  if(score>=80) badge="🏆 Water Champion";
+  else if(score>=60) badge="🥇 Smart Farmer";
+  else if(score>=40) badge="🥈 Water Saver";
+
+  badgeBox.style.display="block";
+  badgeBox.innerHTML="🏅 Badge Earned: "+badge;
+
+  drawChart();
 }
 
 function drawChart(){
-    if(chart) chart.destroy();
-    chart=new Chart(document.getElementById("chart"),{
-        type:"line",
-        data:{
-            labels:history.map((_,i)=>"Day "+(i+1)),
-            datasets:[{
-                label:"Water Credit",
-                data:history,
-                borderColor:"#00fff0",
-                backgroundColor:"rgba(0,255,255,0.3)",
-                fill:true,
-                tension:0.4
-            }]
-        }
-    });
+  if(chart) chart.destroy();
+  chart=new Chart(document.getElementById("chart"),{
+    type:"line",
+    data:{
+      labels:history.map((_,i)=>"Day "+(i+1)),
+      datasets:[{
+        label:"Water Credit",
+        data:history,
+        fill:true,
+        borderColor:"#0077aa",
+        backgroundColor:"rgba(0,150,200,0.3)",
+        tension:0.4
+      }]
+    }
+  });
 }
 </script>
 
 </body>
 </html>
-
